@@ -5,4 +5,5 @@ const conn = maria.createConnection({
   password : 'yss00407209',
   database : 'pokemon'
 });
+
 module.exports = conn;

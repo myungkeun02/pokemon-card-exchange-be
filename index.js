@@ -3,10 +3,14 @@ const bodyParser = require('body-Parser')
 const maria = require('./database/connect/mariadb')
 const app = express()
 const db = maria.connect();
-const jwt = require('./utils/jwt');
+const jwt = require('./jwt');
+const session = require('express-session');
+
 app.use((bodyParser).json())
 
-app.post('/login_process', function (req, res) {
+
+//로그인
+app.post('/', function (req, res) {
   let user_id = req.body.user_id;
   let user_pw = req.body.user_pw;
   const sql = "SELECT * FROM user WHERE user_id = ? AND user_pw = ?"
@@ -24,6 +28,34 @@ app.post('/login_process', function (req, res) {
   console.log("아이디 비밀번호 입력 실패")    
   }
 });
+
+//회원가입
+app.post('/qwe', function (req, res) {
+  let user_id = req.body.user_id;
+  let user_pw = req.body.user_pw;
+  let nickname = req.body.nickname;
+  let phone = req.body.phone;
+
+  const sql = "INSERT INTO user (user_id, user_pw, nickname, phone) VALUES (?,?,?,?);"
+
+  if (user_id && user_pw && nickname && phone) {
+      maria.query(sql, [user_id, user_pw, nickname, phone], function(err, rows, fields) { 
+         if(err) {
+          console.log("회원가입실패")
+         }else {
+          console.log("회원가입성공")
+         }
+      });
+  } else {
+  console.log("아이디 비밀번호 닉네임 휴대폰번호 입력 실패")    
+  }
+});
+
+// id 중복확인
+
+app.post('/',function (req,res){
+
+})
 
 
 app.listen(3000)
